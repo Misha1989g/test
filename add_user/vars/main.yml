@@ -1,3 +1,0 @@
----
-# vars file for add_user
-  sudoGroup: "{{ 'sudo' if ansible_distribution == 'Ubuntu' else 'wheel' }}"
