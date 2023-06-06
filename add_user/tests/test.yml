@@ -1,0 +1,54 @@
+---
+- hosts: cent
+  remote_user: root
+  tasks:
+  - name: download pgdg
+    ansible.builtin.get_url:
+       url: 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-42.0-32.noarch.rpm'
+       dest: /tmp/pgdg-redhat-repo-42.0-32.noarch.rpm
+
+  - name: dnf pgdg
+    yum:
+      name: /tmp/pgdg-redhat-repo-42.0-32.noarch.rpm
+      state: present
+
+  - name: install pgdg
+    yum: name=postgresql12-server state=present update_cache=yes
+
+    #  - name: Initialize the postgresql
+    #    command: sudo /usr/pgsql-12/bin/postgresql-12-setup initdb
+    #  - name: Start PostgreSQL-12
+    #    service: name=postgresql-12 state=started enabled=yes
+
+   - name: Download zabbix repo package
+     ansible.builtin.get_url:
+         url: https://repo.zabbix.com/zabbix/6.2/sles/15/x86_64/zabbix-agent2-6.2.4-release1.sles15.x86_64.rpm
+         dest: /tmp/zabbix-agent2-6.2.4-release1.sles15.x86_64.rpm
+         validate_certs: no
+
+   - name: install zabbix-agent
+     yum:
+       name: /tmp/zabbix-agent2-6.2.4-release1.sles15.x86_64.rpm
+       state: present
+
+   - name: Start zabbix-agent
+     service: name=zabbix-agent state=started enabled=yes
+
+   - name: copy elasticsearch
+     copy: src=/etc/ansible/common/files/elasticsearch-7.17.9.rpm dest=/tmp/elasticsearch-7.17.9.rpm
+
+   - name: install elasticsearch
+     yum:
+       name: /tmp/elasticsearch-7.17.9.rpm
+       state: present
+
+   - name: Start elasticsearch
+     service: name=elasticsearch.service state=started enabled=yes
+
+   - name: copy kibana
+     copy: src=/etc/ansible/common/files/kibana-7.17.9-x86_64.rpm dest=/tmp/kibana-7.17.9-x86_64.rpm
+
+   - name: install kibana
+     yum:
+       name: /tmp/kibana-7.17.9-x86_64.rpm
+       state: present

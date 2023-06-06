@@ -1,0 +1,21 @@
+---
+  - name: Install add_user
+    hosts: all
+    become:
+      yes
+    roles:
+      - add_user
+
+  - name: Install ELK server
+    hosts: centos
+    become: 
+      yes
+    roles:
+      - elk
+
+  - name: Install  Web server
+    hosts: web
+    become:
+      yes
+    roles:
+      - web 
